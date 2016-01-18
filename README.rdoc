@@ -1,0 +1,23 @@
+== README
+
+01. Setup rspec and capybra
+
+group :development, :test do
+  gem "rspec-rails", "3.2.3"   #latest 3.4.0
+end
+
+group :test do
+  gem "capybara", "2.6.4"   #latest 2.6.0
+end
+
+** capybra is only for test
+
+=> bundle install
+
+=> rails g rspec:install
+It will create spec_helper.rb and rails_helper.rb
+
+=============================================================================
+
+
+
