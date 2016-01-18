@@ -289,7 +289,39 @@ end
 
 =================================================================================================
 
-Step 5:
+Step 5: Add guard to the application
+        a. Guard allows us to automatically run specs when we update files. We don't have to keep issuing rspec command
+        b. To add guard to the app, add
+          gem "guard-rspec"
+          gem 'spring-commands-rspec'
+
+        Like as follows
+          group :development, :test do
+            gem 'byebug'
+            gem "rspec-rails", "3.2.3"
+            gem "guard-rspec"
+            gem 'spring-commands-rspec'
+          end
+
+Then run the command
+   => guard init rspec
+  will create a Guardfile in the root directory
+** Observe the Guardfile
+guard :rspec, cmd: "bundle exec rspec" do
+  require "guard/rspec/dsl"
+  dsl = Guard::RSpec::Dsl.new(self)
+
+Change it to the following, so that we can just type
+
+  guard :rspec, cmd: "rspec" do
+    require "guard/rspec/dsl"
+    dsl = Guard::RSpec::Dsl.new(self)
+
+** To run the guard, enter the command "guard" and heat enter. To exit guard
+   enter "exit" command and heat enter
+
+
+==========================================================================================================
 
 
 
