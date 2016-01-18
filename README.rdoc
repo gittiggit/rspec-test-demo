@@ -19,5 +19,114 @@ It will create spec_helper.rb and rails_helper.rb
 
 =============================================================================
 
+Step 2:
+
+Blog App
+-Articles
+  -ID
+  -Title
+  -Body
+
+- Users
+  - ID
+  - Email
+  - Password
+
+- Comments
+  - ID
+  - Body
+  - User_ID
+  -Article_ID
+
+To test the app, first we have to write our features test first, then we will build the features so that it
+can pass the feature test
+
+creating a new file
+spec/features/creating_article_spec.rb and withing this at the top
+require "rails_helper"
+To write a feature test, there is specific syntax to follow
+
+require "rails_helper"
+
+RSpec.feature "Creating Articles" do
+  scenario "A user creates a new article" do
+    visit "/"
+
+    click_link "New Article"
+
+    fill_in "Title", with: "Creating first article"
+    fill_in "Body", with: "Lorem Ispum"
+    click_button "Create Article"
+
+    expect(page).to have_content("Article has been created")
+    expect(page.current_path).to eq(articles_path)
+  end
+end
+
+To run this test
+
+rspec spec/features/creating_article_spec.rb
+
+It will shows an error like as follows
+Failure/Error: visit "/"
+     ActionController::RoutingError:
+       No route matches [GET] "/"
+
+visit "/"   # It expects to have a root route in the app
+
+** To fix this we have to define a root route
+root "articles#index"
+
+Now it will show the error like as
+ Failure/Error: visit "/"
+     ActionController::RoutingError:
+       uninitialized constant ArticlesController
+
+** To fix this we need to create ArticlesController
+rails g controller Articles index
+Lets run the test again and it will shows the following error
+Failure/Error: click_link "New Article"
+     Capybara::ElementNotFound:
+       Unable to find link "New Article"
+
+** To fix this, we are going to create this link now on the app/views/articles/index.html.erb
+<%= link_to "New Article", new_article_path %>
+
+Lets run the test
+
+Failure/Error: visit "/"
+     ActionView::Template::Error:
+       undefined local variable or method `new_article_path'
+
+** Now Take this assignments: The methods I have used within the spec/features/creating_article_spec.rb file
+   find which method belong to rspec and which method belong to capybara??
+
+Context is an alias for describe, and so functionally equivalent. You can use them interchangeably, the only
+difference is in how your spec file reads (there's no difference in test output for example). The Rspec book says:
+
+Feature and scenario are a part of Capybara, and not rspec, and are meant to be used for acceptance tests.
+
+Feature is equivalent to describe / context, and scenario equivalent to it / example.
+
+If you're writing acceptance tests with Capybara, use the feature / scenario syntax, if not use describe / it syntax.
+
+** After the google search, I found
+feature, fill_in, click_button, scenario, visit, expect(page).to all are methods from capybara
+
+Please follow the link for more information
+https://github.com/jnicklas/capybara
+
+
+==========================================================================================
+
+
+
+
+
+
+
+
+
+
 
 
