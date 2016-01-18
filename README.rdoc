@@ -183,6 +183,81 @@ In the application.html.erb
 ======================================================================================================
 
 
+Step 4:
+       a. Create a route for the new_article_path
+       b. run the tast again, it will shows the error like as
+        Failure/Error: click_link "New Article"
+            AbstractController::ActionNotFound:
+              The action 'new' could not be found for ArticlesController
+
+
+       c. To fix this, create a new action in the article controller, run the test
+         def new
+             @article = Article.new
+         end
+
+
+       Failure/Error: click_link "New Article"
+           NameError:
+             uninitialized constant ArticlesController::Article
+
+       d. It means the model Article is not created
+          => rails g model Article title:string body:text
+          => rake db:migrate
+          run the test
+          Failure/Error: click_link "New Article"
+          ActionView::MissingTemplate:
+          Missing template articles/new, application/new with {:locale=>[:en], :formats=>[:html], :variants=>[],
+           :handlers=>[:erb, :builder, :raw, :ruby, :coffee, :jbuilder]}. Searched in:
+
+
+       d. Now create articles/new.html.erb, run the test
+           Failure/Error: fill_in "Title", with: "Creating first article"
+           Capybara::ElementNotFound:
+           Unable to find field "Title
+
+       e. Now we will use the following codes to test the new.html.erb
+
+
+       =================================================================================================
+       <h3 class='text-center'> Adding New Article</h3>
+       <div class='row'>
+         <div class='col-md-12'>
+           <%= form_for(@article, :html => {class: "form-horizontal", role: "form"}) do |f| %>
+             <div class='form-group'>
+               <div class='control-label col-md-1'>
+                 <%= f.label :title %>
+               </div>
+               <div class='col-md-11'>
+                 <%= f.text_field :title, class: 'form-control', placeholder: 'Title of article', autofocus: true %>
+               </div>
+             </div>
+             <div class='form-group'>
+               <div class='control-label col-md-1'>
+                 <%= f.label :body %>
+               </div>
+               <div class='col-md-11'>
+                 <%= f.text_area :body, rows: 10, class: 'form-control', placeholder: 'Body of article' %>
+               </div>
+             </div>
+             <div class='form-group'>
+               <div class='col-md-offset-1 col-md-11'>
+                 <%= f.submit class: 'btn btn-primary btn-lg pull-right' %>
+               </div>
+             </div>
+           <% end %>
+         </div>
+       </div>
+       ========================================================================================================
+
+       f. Run the test, it will show the following error
+          Failure/Error: click_button "Create Article"
+          AbstractController::ActionNotFound:
+          The action 'create' could not be found for ArticlesController
+
+       g.
+
+
 
 
 
