@@ -595,7 +595,91 @@ Step 9: Update the guard:
 
 ** Now guard will run spec/features, when I make any changes to the desired file(model, controller, route, views)
 
+===================================================================================================
 
+Step 10: Edit article feature spec
+         a. Create spec/features/editing_article_spec.rb
+         b. Add the codes
 
+          require "rails_helper"
+
+          RSpec.feature "Editing an article" do
+
+            before do
+              @article = Article.create(title:"Title of the article", body:"Body of the article")
+            end
+
+            scenario "A user updates an article" do
+              visit "/"
+
+              click_link @article.title
+              click_link "Edit Article"
+
+              fill_in "Title", with: "Updated title"
+              fill_in "Body", with: "Updated body"
+              click_button "Update article"
+
+              expect(page).to have_content("Article updated")
+              expect(current_path).to eq(article_path(@article))
+
+            end
+
+            scenario "A user fail to update an article" do
+              visit "/"
+
+              click_link @article.title
+              click_link "Edit Article"
+
+              fill_in "Title", with: ""
+              fill_in "Body", with: "Updated body"
+              click_button "Update article"
+
+              expect(page).to have_content("Article not updated")
+              expect(current_path).to eq(article_path(@article))
+
+            end
+          end
+
+Run guard. It will shows the error, because we don't have a link with the text "Edit Article"
+
+         Failure/Error: click_link "Edit Article"
+         Capybara::ElementNotFound:
+         Unable to find link "Edit Article"
+
+** To fix this, create a link in the show.html.erb
+        <%= link_to "Edit Article", edit_article_path(@article) %>
+Now the error is
+        Failure/Error: click_link "Edit Article"
+        AbstractController::ActionNotFound:
+        The action 'edit' could not be found for ArticlesController
+
+** To fix this create edit action in the article controller
+        def edit
+          @article = Article.find params[:id]
+        end
+
+Now the error is
+Failure/Error: click_link "Edit Article"
+       ActionView::MissingTemplate:
+       Missing template articles/edit, application/edit with {:locale=>[:en], :formats=>[:html],
+        :variants=>[], :handlers=>[:erb, :builder, :raw, :ruby, :coffee, :jbuilder]}. Searched
+
+**To fix this, create edit templete(copy and paste from new.html.erb)
+         Failure/Error: click_button "Update article"
+         AbstractController::ActionNotFound:
+         The action 'update' could not be found for ArticlesController
+** Create update action in the article controller
+       def update
+         @article = Article.find params[:id]
+         if @article.update article_params
+           flash[:success] = "Article updated"
+           redirect_to @article
+         else
+           flash.now[:notice] = "Article not updated"
+           render :edit
+         end
+       end
+
+Note: It now passes the test.
 
 
