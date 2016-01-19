@@ -569,7 +569,31 @@ Now run guard, and it will show, because we don't have the show templete
 
 **
 
+=======================================================================================================
 
+Step 9: Update the guard:
+        ** I would like that to be such that, my guard file should run every time when I make a change to
+        my model, controller, views or in route, my guard should run spec/fearures. To do this I have to make
+        change to my guard file in the such way
+
+       a.  # for the rails files add this lines
+         watch(%r{^app/controller/(.+)_(controller)\.rb$}){"spec/features"}
+         watch(%r{^app/models(.+)\.rb$}){"spec/features"}
+
+       b. #for the Rails config changes
+       watch(rails.routes)         { "#{rspec.spec_dir}/routing" }
+
+        change this line to
+        watch(rails.routes)          { "spec"} #{ "#{rspec.spec_dir}/routing" }
+
+        c. # Capybara features specs (for the view)
+        watch(rails.view_dirs)      { |m| rspec.spec.("features/#{m[1]}") }
+
+        Change this line to
+         watch(rails.view_dirs)     {"spec/features"} # { |m| rspec.spec.("features/#{m[1]}") }
+
+
+** Now guard will run spec/features, when I make any changes to the desired file(model, controller, route, views)
 
 
 
