@@ -14,7 +14,7 @@ RSpec.feature "Editing an article" do
 
     fill_in "Title", with: "Updated title"
     fill_in "Body", with: "Updated body"
-    click_button "Update article"
+    click_button "Update Article"
 
     expect(page).to have_content("Article updated")
     expect(current_path).to eq(article_path(@article))
@@ -29,7 +29,7 @@ RSpec.feature "Editing an article" do
 
     fill_in "Title", with: ""
     fill_in "Body", with: "Updated body"
-    click_button "Update article"
+    click_button "Update Article"
 
     expect(page).to have_content("Article not updated")
     expect(current_path).to eq(article_path(@article))
