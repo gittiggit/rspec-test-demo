@@ -753,3 +753,48 @@ Step 14: setup devise
      => rails g devise:install
 It will add locals/devise.rb and initializers/devise.rb file to the application
 
+========================================================================================================
+
+Step 15: User Model
+        a. => rails g devise User
+           => rake db:migrate
+        b. rake routes | grep devise   # to see all the routes for devise
+
+
+Step 16: Create feature spec for users sign up
+         spec/features/signing_users_up_spec.rb
+       Include the following codes
+
+    require "rails_helper"
+
+    RSpec.feature "User signup" do
+        scenario "With valid credentials" do
+            visit "/"
+
+            click_link "Sign up"
+            fill_in "Email", with: "user@example.com"
+            fill_in "Password", with: "password"
+            fill_in "Password confirmation", with: "password"
+            click_button "Sign up"
+
+            expect(page).to have_content("You have signed up successfully")
+
+        end
+    end
+
+Run the test, and will show
+      Failure/Error: click_link "Sign up"
+      Capybara::ElementNotFound:
+      Unable to find link "Sign up"
+
+** Add the sign up link to application.html.erb
+      <li class="active"><%= link_to "Sign up", new_user_registration_path %></li>
+
+Now it will pass the test
+
+
+
+====================================================================================================
+
+
+
