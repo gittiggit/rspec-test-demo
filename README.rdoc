@@ -738,3 +738,18 @@ Step 12: Update the styling of the edit and destroy link
 
 
 Step 13: Refactor article controller and edit, new page
+
+===========================================================================================================
+*** Completed - Articles with feature tests
+Now to implement
+  - Users Sign-up
+  - Log in.Log out
+  - Restrict access to certain features
+
+Step 14: setup devise
+     a. gem "devise"
+     => bundle install
+     b. install devise in the app
+     => rails g devise:install
+It will add locals/devise.rb and initializers/devise.rb file to the application
+
