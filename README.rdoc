@@ -483,10 +483,91 @@ Now it will show
 
 ** To fix this, give the link to the title
 
+================================================================================================================
+
+Step 8: Feature test for show an article
+       a. Create a spec spec/features/showing_article_spec.rb
+       b. add the codes
+
+       require "rails_helper"
+
+       RSpec.feature "Showing an Article" do
+         before do
+           @article = Article.create(title:"Title of the article", body:"Body of the article")
+         end
+
+         scenario "Display individual article" do
+           visit "/"   # visit root route
+
+           click_link @article.title
+
+           expect(page).to have_content(@article.title)
+           expect(page).to have_content(@article.body)
+           expect(current_path).to eql(article_path(@article))
+         end
+       end
+
+---------------------------------------------------------------------------------------------
+Here expect(current_path).to eql(article_path(@article))
+** current_path is a capybara method to get the current path(url)
+Equality matchers
+Ruby exposes several different methods for handling equality:
+a.equal?(b) # object identity - a and b refer to the same object
+a.eql?(b)   # object equivalence - a and b have the same value
+a == b      # object equivalence - a and b have the same value with type conversions
 
 
+Note that these descriptions are guidelines but are not forced by the language. Any object
+can implement any of these methods with its own semantics.
+rspec-expectations ships with matchers that align with each of these methods:
+ expect(a).to equal(b) # passes if a.equal?(b)
+  expect(a).to eql(b)   # passes if a.eql?(b)
+  expect(a).to be == b  # passes if a == b
 
 
+It also ships with two matchers that have more of a DSL feel to them:
+ expect(a).to be(b) # passes if a.equal?(b)
+  expect(a).to eq(b) # passes if a == b
+
+
+#Ex:
+expect(current_path).to eql(article_path(@article))
+
+-------------------------------------------------------------------------------------------------------
+
+Run the test, it will show
+
+     Failure/Error: click_link @article.title
+     AbstractController::ActionNotFound:
+     The action 'show' could not be found for ArticlesController
+
+**To fix this create show action in the article controller
+  def show
+    @article = Article.find params[:id]
+
+  end
+Now run guard, and it will show, because we don't have the show templete
+      Failure/Error: click_link @article.title
+      ActionView::MissingTemplate:
+      Missing template articles/show, application/show with {:locale=>[:en], :formats=>[:html], :variants=>[],
+        :handlers=>[:erb, :builder, :raw, :ruby, :coffee, :jbuilder]}. Searched in:
+
+**Add the show.html.erb, run the test
+       Failure/Error: expect(page).to have_content(@article.title)
+       expected to find text "Title of the article" in "RSpec Test App Authors"
+
+** Add the title and body to the show page
+        <article class="detail-article">
+          <h1 class="article-detail-title"><%= @article.title %></h1>
+          <div class="glyphicon glyphicon-calendar" id="article-date">
+            <%= @article.created_at.strftime("%b %d, %Y") %>
+          </div>
+          <div class="article-body">
+            <%= @article.body %>
+          </div>
+        </article>
+
+**
 
 
 
