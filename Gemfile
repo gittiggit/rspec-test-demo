@@ -17,6 +17,7 @@ group :development, :test do
   gem "rspec-rails", "3.2.3"
   gem "guard-rspec"
   gem "spring-commands-rspec"
+  gem "pry"
 end
 
 group :test do

@@ -388,6 +388,102 @@ Still it will show the same error. Because we hadn't implemented the validation 
 
    After this it will pass the test
 
+==========================================================================================
+
+Flash[:notice]’s message will persist to the next action and should be used when redirecting to another
+ action via the ‘redirect_to’ method. Flash.now[:notice]’s message will be displayed in the view your are
+  rendering via the ‘render’ method.
+
+
+Step 7: Listing Articles with BDD
+
+       a. Create an spec/features/listing_articles_spec.rb
+       b. add the codes to test, run the guard
+
+       require "rails_helper"
+
+       RSpec.feature "Listing Articles" do
+
+         before do
+           @article1 = Article.create(title:"Title of the first article", body:"Body of the first article")
+           @article2 = Article.create(title:"Title of the first article", body:"Body of the first article")
+         end
+
+         scenario "List all articles" do
+           visit "/"
+
+           expect(page).to have_content(@article1.title)
+           expect(page).to have_content(@article1.body)
+           expect(page).to have_content(@article1.title)
+           expect(page).to have_content(@article1.body)
+           expect(page).to have_link(@article1.title)
+           expect(page).to have_link(@article2.title)
+         end
+       end
+
+=================================================================================================
+
+Before and after hooks
+
+As a developer using RSpec
+I want to execute arbitrary code before and after each example
+So that I can control the environment in which it is run
+
+This is supported by the before and after methods which each take a symbol
+indicating the scope, and a block of code to execute.
+
+before(:each) blocks are run before each example
+before(:all) blocks are run once before all of the examples in a group
+
+after(:each) blocks are run after each example
+after(:all) blocks are run once after all of the examples in a group
+
+Before and after blocks are called in the following order:
+before suite
+before all
+before each
+after each
+after all
+after suite
+
+=================================================================================================
+
+
+
+Now it will show the following error, because the article title and body we created in the before do block is not present
+in the UI.
+     1) Listing Articles List all articles
+     Failure/Error: expect(page).to have_content(@article1.title)
+     expected to find text "Title of the first article" in "RSpec Test App Authors Create a new Article New Article"
+
+** To fix this, add the title and body to the index page
+      <% @articles.each do |article| %>
+        <div class="well well-lg">
+          <div class="article-title">
+            <%= article.title %>
+          </div>
+          <div class="article-body">
+            <%= article.body %>
+          </div>
+        </div>
+      <% end %>
+Now it will show
+     Failure/Error: visit "/"
+     ActionView::Template::Error:
+     undefined method `each' for nil:NilClass
+
+** To fix this, define the @articles in the index action
+  def index
+    @articles = Article.all
+  end
+
+Now it will show
+       Failure/Error: expect(page).to have_link(@article1.title)
+       expected to find link "Title of the first article" but there were no matches
+
+** To fix this, give the link to the title
+
+
 
 
 
