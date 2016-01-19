@@ -683,3 +683,56 @@ Failure/Error: click_link "Edit Article"
 Note: It now passes the test.
 
 
+===========================================================================================================
+
+Step 11: deleting article feature test
+         a. create spec/features/deleting_article_path
+         b. Add the codes
+
+         require "rails_helper"
+
+         RSpec.feature "Deleting an article" do
+
+           before do
+             @article = Article.create(title:"Title of the article", body: "Body of the article")
+           end
+
+           scenario "A user deletes an article" do
+             visit "/"
+
+             click_link @article.title
+             click_link "Delete"
+
+             expect(page).to have_content("Article deleted")
+             expect(current_path).to eq(articles_path)
+           end
+         end
+
+Run the guard. Shows an error. To fix this add the link with text "Delete" in the views/articles/show.html.erb
+       Failure/Error: click_link "Delete"
+       Capybara::ElementNotFound:
+       Unable to find link "Delete"
+
+------------
+       <%= link_to "Delete", article_path(@article), method: :delete, data:{confirm: "Are you sure?"} %>
+
+Now the error
+     Failure/Error: click_link "Delete"
+     AbstractController::ActionNotFound:
+       The action 'destroy' could not be found for ArticlesController
+
+** Create the destroy action
+     def destroy
+       @article = Article.find params[:id]
+       @article.destroy
+       flash[:success] = "Article deleted"
+       redirect_to articles_path
+     end
+
+Now it will pass the test
+
+
+Step 12: Update the styling of the edit and destroy link
+      class:"btn btn-primary btn-lg btn-space"
+      class:"btn btn-danger btn-lg btn-space"
+
