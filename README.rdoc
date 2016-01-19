@@ -855,3 +855,22 @@ Step 17: Styling devise views
 
 =======================================================================================================
 
+Step 18: Users sign in feature test
+        a. create spec/features/signing_users_in_spec.rb
+        b. Add the link to header
+         <div class="nav navbar-nav">
+                    <p class="navbar-text">
+                      Signed in as <%= "#{current_user.email}" %>
+                     <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
+                    </p>
+                  </div>
+                <% else %>
+                    <li><%= link_to "Sign in", new_user_session_path %></li>
+                    <li><%= link_to "Sign up", new_user_registration_path %></li>
+                <% end %>
+
+Pass the test
+
+===========================================================================================
+
+
